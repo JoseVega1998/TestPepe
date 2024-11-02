@@ -11,6 +11,6 @@ struct ApiRequestModel {
     let endpoint: Endpoint
     let method: HTTPMethod
     let header: Header = .noHeader
-    let encoding: Encoding?
+    let encoding: Encoding
     let parameters: ParameterType?
 }

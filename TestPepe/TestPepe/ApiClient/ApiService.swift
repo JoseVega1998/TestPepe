@@ -31,6 +31,7 @@ class ApiService: NSObject {
         var request = URLRequest(url: url)
         request.httpMethod = requestModel.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         switch requestModel.header {
         case .Authorization:
@@ -39,20 +40,17 @@ class ApiService: NSObject {
         case .noHeader: break // do nothing
         }
         if let parameters = requestModel.parameters {
-            if let encoding = requestModel.encoding {
-                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                switch encoding {
-                case .url:
-                    var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-                    let percentEncodedQuery = (urlComponents?.percentEncodedQuery.map { $0 + "&" } ?? "") + self.query(parameters)
-                    urlComponents?.percentEncodedQuery = percentEncodedQuery
-                    request.url = urlComponents?.url
-
-                case .json:
-                    
-                    request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
-                }
+            switch requestModel.encoding {
+            case .url:
+                var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+                let percentEncodedQuery = (urlComponents?.percentEncodedQuery.map { $0 + "&" } ?? "") + self.query(parameters)
+                urlComponents?.percentEncodedQuery = percentEncodedQuery
+                request.url = urlComponents?.url
+                
+            case .json:
+                request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
             }
+            
         }
         let parameters = String(data: request.httpBody ?? Data(), encoding: .utf8)
         print("-------- REQUEST --------")
@@ -92,24 +90,24 @@ class ApiService: NSObject {
     
     func query(_ parameters: ParameterType) -> String {
         var components: [(String, String)] = []
-
+        
         for key in parameters.keys.sorted(by: <) {
             let value = parameters[key]!
-            components += queryComponents(fromKey: key, value: value)
+            components += self.queryComponents(fromKey: key, value: value)
         }
         return components.map { "\($0)=\($1)" }.joined(separator: "&")
     }
-
+    
     func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
         var components: [(String, String)] = []
-
+        
         if let dictionary = value as? [String: Any] {
             for (nestedKey, value) in dictionary {
-                components += queryComponents(fromKey: "\(key)[\(nestedKey)]", value: value)
+                components += self.queryComponents(fromKey: "\(key)[\(nestedKey)]", value: value)
             }
         } else if let array = value as? [Any] {
             for value in array {
-                components += queryComponents(fromKey: "\(key)[]", value: value)
+                components += self.queryComponents(fromKey: "\(key)[]", value: value)
             }
         } else if let value = value as? NSNumber {
             if value.isBool {
@@ -122,10 +120,10 @@ class ApiService: NSObject {
         } else {
             components.append((escape(key), escape("\(value)")))
         }
-
+        
         return components
     }
-
+    
     func escape(_ string: String) -> String {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
