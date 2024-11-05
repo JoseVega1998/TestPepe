@@ -10,6 +10,6 @@ import Foundation
 struct DescriptionConstants {
     struct ViewModifiers {
         static let maxTitleLinesNumber: Int = 2
-        static let maxDescriptionLinesNumber: Int = 10
+        static let maxDescriptionLinesNumber: Int = 5
     }
 }

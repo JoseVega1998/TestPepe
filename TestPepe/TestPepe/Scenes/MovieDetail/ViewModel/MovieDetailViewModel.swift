@@ -31,11 +31,7 @@ class MovieDetailViewModel {
     var movieReleaseDate: String {
         self.movie.releaseDate ?? ""
     }
-    
-    var movieVoteAverage: String {
-        "\((self.movie.voteAverage ?? 0.0).rounded(toPlaces: 1))"
-    }
-    
+        
     var movieBackdrop: String {
         self.movie.backdropPath ?? ""
     }
@@ -54,5 +50,38 @@ class MovieDetailViewModel {
     
     var description: String {
         self.movie.overview ?? ""
+    }
+
+    var voteAverage: String {
+        "\((self.movie.voteAverage ?? 0.0).rounded(toPlaces: 1))/10"
+    }
+    
+    var adultsOnly: (ban: Bool, title: String) {
+        if (self.movie.adult ?? false) {
+            return (true, "Adults only!")
+        }
+        else {
+            return (false, "Family friendly")
+        }
+    }
+    
+    var isPopular: (ban: Bool, title: String) {
+        if (self.movie.popularity ?? 0.0) > 120 {
+            return (true, "It's popular!")
+        }
+        else {
+            return (false, "It's not popular")
+        }
+    }
+    
+    var hasTrailer: Bool {
+        self.movie.video ?? false
+    }
+    
+    var trailerAlert: (title: String, body: String) {
+        return (
+            "Opps",
+            self.hasTrailer ? "The video player could not be started, please try again later." : "The trailer has not available, please try with another movie."
+        )
     }
 }

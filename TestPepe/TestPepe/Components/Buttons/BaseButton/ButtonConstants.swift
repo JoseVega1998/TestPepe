@@ -51,7 +51,7 @@ struct ButtonsConstants {
             backgroundColor: .clear,
             disableForegroundColor: .third,
             disableBackgroundColor: .clear,
-            highlightedForegroundColor: .primaryLight,
+            highlightedForegroundColor: .primary,
             highlightedBackGroundColor: .clear
         )
     )

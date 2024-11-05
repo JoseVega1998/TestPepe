@@ -80,7 +80,15 @@ class MovieListViewController: BaseViewController {
                 super.dismissLoader()
             }
             catch {
-                print(error)
+                let alertView = AlertView(
+                    image: .alert,
+                    title: "Oops",
+                    body: error.localizedDescription,
+                    primaryButtonText: "Dismiss",
+                    primaryPerforms: { self.dismiss(animated: true)}
+                )
+                super.dismissLoader()
+                Navigation.navigate(to: alertView, from: self, using: .presentBottomSheet)
             }
         }
     }

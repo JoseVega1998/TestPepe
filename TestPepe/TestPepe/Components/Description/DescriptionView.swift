@@ -25,6 +25,11 @@ import UIKit
         return label
     }()
     
+    private let textButton: CustomButton = {
+        let button = CustomButton()
+        return button
+    }()
+    
     private lazy var contentStack: UIStackView = {
         let verticalStack = UIStackView(arrangedSubviews: [
             self.titleLabel,
@@ -35,9 +40,27 @@ import UIKit
         verticalStack.distribution = .fill
         verticalStack.alignment = .leading
         
-        return verticalStack
+        let horizontalStack = UIStackView(arrangedSubviews: [
+            verticalStack,
+            self.textButton
+        ])
+        horizontalStack.axis = .horizontal
+        horizontalStack.spacing = 4
+        horizontalStack.distribution = .fill
+        horizontalStack.alignment = .bottom
+        
+        return horizontalStack
     }()
-            
+    
+    private var titleText: String = ""
+    private var bodyText: String = ""
+    private var buttonTitle: String = ""
+    private var buttonAction:(() -> Void)?
+
+    var hasButton: Bool {
+        return self.buttonAction != nil && !self.titleText.isEmpty
+    }
+                
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -45,6 +68,34 @@ import UIKit
     
     required init?(coder: NSCoder) {
         fatalError("init() has not been implemented")
+    }
+    
+    func configure(
+        title: String,
+        description: String,
+        buttonTitle: String,
+        buttonAction: @escaping (() -> Void)
+    ) {
+        self.titleText = title
+        self.bodyText = description
+        self.buttonTitle = buttonTitle
+        self.buttonAction = buttonAction
+        self.configureComponents()
+    }
+    
+    func configure(title: String, description: String) {
+        self.titleText = title
+        self.bodyText = description
+        self.configureComponents()
+    }
+
+    private func configureComponents() {
+        self.titleLabel.text = self.titleText
+        self.descriptionLabel.text = self.bodyText
+        if let action = self.buttonAction {
+            self.textButton.setUp(type: .Text, title: self.buttonTitle)
+            self.textButton.setAction { action() }
+        }
     }
     
     private func setUpUI() {
@@ -58,11 +109,7 @@ import UIKit
             right: self.rightAnchor,
             paddingRight: 16
         )
-    }
-    
-    public func configure(title: String, description: String) {
-        self.titleLabel.text = title
-        self.descriptionLabel.text = description
+        //self.textButton.isHidden = !self.hasButton
     }
         
 }

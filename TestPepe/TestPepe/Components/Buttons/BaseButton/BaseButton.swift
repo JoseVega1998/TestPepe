@@ -111,6 +111,5 @@ import UIKit
                 for: state
             )
         }
-
     }
 }

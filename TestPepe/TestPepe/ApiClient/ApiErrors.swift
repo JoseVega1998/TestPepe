@@ -23,7 +23,7 @@ extension NetworkingError: LocalizedError {
         case .customError(let msg): return NSLocalizedString(msg, comment: "")
         case .generalError: return NSLocalizedString("API Error: General Error", comment: "")
         case .invalidURL: return NSLocalizedString("API Error: URL is invalid", comment: "")
-        case .timeOut: return NSLocalizedString("Tiempo de espera agotado.", comment: "")
+        case .timeOut: return NSLocalizedString("This request has timed out.", comment: "")
         case .connectionLost: return NSLocalizedString("Se perdió la conexión de red", comment: "")
         case .httpResponseError: return NSLocalizedString("Api Error: httpResponseError", comment: "")
         case .serverError: return NSLocalizedString("Api Error: Server Error", comment: "")

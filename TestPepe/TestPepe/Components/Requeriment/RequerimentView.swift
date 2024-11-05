@@ -71,5 +71,13 @@ import UIKit
             self.icon.isHidden = !check
         }
     }
-        
+    
+    public func setHasAlert(with description: String) {
+        self.descriptionLabel.text = description
+        self.descriptionLabel.textColor = .systemRed
+        self.backgroundColor = .systemRed.withAlphaComponent(0.1)
+        self.icon.image = UIImage(systemName: "xmark.circle.fill") ?? .add
+        self.icon.isHidden = false
+        self.icon.tintColor = .systemRed
+    }
 }
