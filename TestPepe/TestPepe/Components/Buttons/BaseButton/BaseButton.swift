@@ -77,7 +77,7 @@ import UIKit
             }
         }()
         return NSMutableAttributedString(
-            string: buttonModel.title,
+            string: title,
             attributes: [
                 .font: buttonModel.baseFont,
                 .foregroundColor: color,
@@ -99,6 +99,18 @@ import UIKit
         self.setImage(tintedIcon, for: .normal)
         self.tintColor = buttonModel.colorSet.foregroundColor
         self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+    }
+    
+    public func setTitle(with title: String) {
+        [.normal, .highlighted, .disabled].forEach { state in
+            self.setAttributedTitle(
+                self.makeTitke(
+                    title: title,
+                    state: state
+                ),
+                for: state
+            )
+        }
 
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 @objc public class CustomButton: BaseButton {
     private var performs:(() -> Void)?
     
-    public func setUp(type: BaseButtonType, title: String) {
+    public func setUp(type: BaseButtonType, title: String = "") {
         var model: ButtonModel = type.model
         model.title = title
         super.setUpUI(model: model)

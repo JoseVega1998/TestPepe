@@ -12,7 +12,7 @@ class ApiService: NSObject {
     
     static let shared = ApiService()
     private let configuration: URLSessionConfiguration
-    private let bearerToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YzdhYWVlN2UwY2MzODljMzEwMDk5ZmUyMzUxMzU1YSIsIm5iZiI6MTczMDQ4NzIxNi40ODU5MTE2LCJzdWIiOiI2NzI0MzM0Njc5OGY3MjZkMTIyOGRjMDEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.6PFK3CKRZOCFn-rM-ajGUU6mHK00Uv5H1jyvuUwpz_k"
+    private let bearerToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YzdhYWVlN2UwY2MzODljMzEwMDk5ZmUyMzUxMzU1YSIsIm5iZiI6MTczMDc0MTg2MC41OTYxNTgzLCJzdWIiOiI2NzI0MzM0Njc5OGY3MjZkMTIyOGRjMDEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.EljFXWZR64y34v07rJ87wCIRV2mF7XyZIijcVTHOUu0"
     private lazy var session = URLSession(configuration: self.configuration)
     
     override init() {
@@ -31,7 +31,7 @@ class ApiService: NSObject {
         var request = URLRequest(url: url)
         request.httpMethod = requestModel.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         switch requestModel.header {
         case .Authorization:
@@ -55,8 +55,9 @@ class ApiService: NSObject {
         let parameters = String(data: request.httpBody ?? Data(), encoding: .utf8)
         print("-------- REQUEST --------")
         print("METHOD: \(requestModel.method.rawValue)")
-        print("URL: \(request.url?.absoluteString ?? "")")
-        print("BODY: \( parameters ?? "")")
+        print("HEADERS: \(request.allHTTPHeaderFields ?? ["":""])")
+        print("URL: \(request.url?.absoluteString ?? "N/A")")
+        print("BODY: \(parameters ?? "")")
         
         do {
             let (data, response) = try await self.session.data(for: request)

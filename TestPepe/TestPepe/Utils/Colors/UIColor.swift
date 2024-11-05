@@ -8,20 +8,7 @@
 import UIKit
 
 extension UIColor {
-    
-    public enum Colors: String {
-        case alert_light
-        case alert
-        case blackground_2
-        case blackground
-        case primary_light
-        case primary
-        case secondary_light
-        case secondary
-        case third_light
-        case third
-    }
-    
+        
     var alert: UIColor {
         UIColor(named: Colors.alert.rawValue) ?? .black
     }

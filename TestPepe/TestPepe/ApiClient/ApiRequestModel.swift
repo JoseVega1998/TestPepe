@@ -10,7 +10,7 @@ import Foundation
 struct ApiRequestModel {
     let endpoint: Endpoint
     let method: HTTPMethod
-    let header: Header = .noHeader
+    let header: Header
     let encoding: Encoding
     let parameters: ParameterType?
 }
