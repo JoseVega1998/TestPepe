@@ -23,9 +23,16 @@ class BaseViewController: UIViewController {
         
     private func configureNavigationBar() {
         guard let nv = self.navigationController else { return }
-        nv.navigationBar.prefersLargeTitles = true
+        nv.navigationBar.prefersLargeTitles = false
         nv.navigationBar.isTranslucent = true
-        nv.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.primary]
+        let backImage = UIImage(systemName: "chevron.left.circle.fill")?.withTintColor(.primary)
+        nv.navigationBar.backIndicatorImage = backImage
+        nv.navigationBar.backIndicatorTransitionMaskImage = backImage
+        nv.navigationBar.backItem?.title = ""
+        nv.navigationBar.titleTextAttributes = [
+            .foregroundColor: UIColor.primary,
+            .font: UIFont.titleFont(type: .Black)
+        ]
     }
     
     func showLoader() {
