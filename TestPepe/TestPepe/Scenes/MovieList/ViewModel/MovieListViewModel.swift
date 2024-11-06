@@ -95,7 +95,9 @@ class MovieListViewModel {
         }
         else {
             self.page = page
-            self.movieList = self.movieList + movieList
+            for movie in movieList {
+                self.movieList.append(movie)
+            }
         }
     }
     
