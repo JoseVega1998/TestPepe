@@ -9,6 +9,25 @@ import UIKit
 
 class AlertView: UIViewController {
     
+    // MARK: - PRIVATE PROPERTIES
+    private var image: UIImage = UIImage.alert
+    private var titleText: String = ""
+    private var bodyText: String = ""
+    private var primaryButtonText: String = ""
+    private var secondaryButtonText: String = ""
+    private var primaryPerforms:(() -> Void)?
+    private var secondaryPerforms:(() -> Void)?
+    private var additionalCloseAction:(() -> Void)?
+    
+    private var hasPrimaryButton: Bool {
+        return self.primaryPerforms != nil && !self.primaryButtonText.isEmpty
+    }
+    
+    private var hasSecondaryButton: Bool {
+        return self.secondaryPerforms != nil && !self.secondaryButtonText.isEmpty
+    }
+    
+    // MARK: - COMPONENTS
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -19,8 +38,10 @@ class AlertView: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyLFont(type: .Bold)
-        label.textColor = .black
+        label.textColor = .primary
         label.numberOfLines = AlertViewConstants.ViewModifiers.maxTitleLinesNumber
+        label.textAlignment = .center
+        label.setContentHuggingPriority(.defaultLow, for: .vertical)
         return label
     }()
     
@@ -28,8 +49,9 @@ class AlertView: UIViewController {
         let label = UILabel()
         label.font = .bodyFont(type: .Medium)
         label.textColor = .primary
-        label.numberOfLines = 5
+        label.numberOfLines = AlertViewConstants.ViewModifiers.maxBodyLinesNumber
         label.textAlignment = .center
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return label
     }()
     
@@ -57,7 +79,7 @@ class AlertView: UIViewController {
         let view = UIView()
         view.backgroundColor = .background
         view.layer.cornerRadius = AlertViewConstants.ViewModifiers.cornerRadius
-        
+
         let stack = UIStackView(
             arrangedSubviews: [
                 self.imageView,
@@ -66,17 +88,10 @@ class AlertView: UIViewController {
             ]
         )
         stack.axis = .vertical
-        stack.spacing = 12
-        stack.distribution = .fillProportionally
+        stack.spacing = 16
+        stack.distribution = .equalSpacing
         stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        self.bodyLabel.setConstraints(
-            left: stack.leftAnchor,
-            paddingLeft: 16,
-            right: stack.rightAnchor,
-            paddingRight: 16
-        )
-        
+
         if self.hasPrimaryButton { stack.addArrangedSubview(self.primaryButton) }
         if self.hasSecondaryButton { stack.addArrangedSubview(self.textButton) }
         
@@ -87,7 +102,9 @@ class AlertView: UIViewController {
             bottom: view.bottomAnchor,
             paddingBottom: 16,
             left: view.leftAnchor,
-            right: view.rightAnchor
+            paddingLeft: 16,
+            right: view.rightAnchor,
+            paddingRight: 16
         )
         view.addSubview(self.closeButton)
         self.closeButton.setConstraints(
@@ -98,24 +115,8 @@ class AlertView: UIViewController {
         )
         return view
     }()
-    
-    private var image: UIImage = UIImage.alert
-    private var titleText: String = ""
-    private var bodyText: String = ""
-    private var primaryButtonText: String = ""
-    private var secondaryButtonText: String = ""
-    private var primaryPerforms:(() -> Void)?
-    private var secondaryPerforms:(() -> Void)?
-    private var additionalCloseAction:(() -> Void)?
-    
-    var hasPrimaryButton: Bool {
-        return self.primaryPerforms != nil && !self.primaryButtonText.isEmpty
-    }
-    
-    var hasSecondaryButton: Bool {
-        return self.secondaryPerforms != nil && !self.secondaryButtonText.isEmpty
-    }
-    
+
+    // MARK: - INIT
     convenience init(
         image: UIImage,
         title: String,
@@ -171,12 +172,14 @@ class AlertView: UIViewController {
         self.additionalCloseAction = additionalCloseAction
     }
     
+    // MARK: - LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureComponents()
         self.setUpUI()
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func configureComponents() {
         self.imageView.image = self.image
         self.titleLabel.text = self.titleText

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// TEST COMPONENTS
+
 class ViewController: UIViewController {
     
     private lazy var primaryIconButton: CustomButton = {
@@ -173,11 +175,6 @@ class ViewController: UIViewController {
     }
     
     private func initApp() {
-        Navigation.navigate(
-            to: Navigation.createMovieListVc(),
-            from: self,
-            using: .push
-        )
     }
 }
 

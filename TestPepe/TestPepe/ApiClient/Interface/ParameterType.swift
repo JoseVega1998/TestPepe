@@ -7,4 +7,4 @@
 
 import Foundation
 
-public typealias ParameterType = [String: Any]
+typealias ParameterType = [String: Any]

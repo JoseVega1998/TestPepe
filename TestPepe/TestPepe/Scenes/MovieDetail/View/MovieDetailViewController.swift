@@ -9,8 +9,10 @@ import UIKit
 
 class MovieDetailViewController: BaseViewController {
     
-    private let viewModel: MovieDetailViewModel
+    // MARK: - PUBLIC PROPERTIES
+    let viewModel = MovieDetailViewModel()
     
+    // MARK: - COMPONENTS
     private let backDrop: UIImageView = {
         let image = UIImageView()
         image.setWidth(width: UIScreen.screenWidth)
@@ -191,20 +193,8 @@ class MovieDetailViewController: BaseViewController {
         let scroll = DynamicHeightScrollView(contentView: self.contentStack)
         return scroll
     }()
-    
-    init?(coder: NSCoder, movie: MovieListResponse.MovieList) {
-        self.viewModel = MovieDetailViewModel(movie: movie)
-        super.init(coder: coder)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("ViewController resign")
-    }
-    
+        
+    // MARK: - LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUpUi()
@@ -215,6 +205,7 @@ class MovieDetailViewController: BaseViewController {
         self.getImages()
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUi() {
         self.title = "Detail"
         self.view.addSubview(scrollView)
@@ -271,7 +262,7 @@ class MovieDetailViewController: BaseViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             let alertView = AlertView(
                 image: .alert,
-                title: "Opps",
+                title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
                 body: "To see a movie via streaming you need a subscription",
                 primaryButtonText: "Sign up",
                 primaryPerforms: { self.dismiss(animated: true) },

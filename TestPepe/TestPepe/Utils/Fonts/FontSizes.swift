@@ -8,13 +8,13 @@
 import UIKit
 
 struct FontSizes {
-    //MARK: - Title
+    //MARK: - TITLES
     static let titleXxl: CGFloat = 32.0
     static let titleXl: CGFloat = 28.0
     static let titleL: CGFloat = 24.0
     static let title: CGFloat = 20.0
     
-    //MARK: - Body
+    //MARK: - BODY
     static let bodyXxl: CGFloat = 20.0
     static let bodyXl: CGFloat = 18.0
     static let bodyL: CGFloat = 16.0

@@ -10,6 +10,7 @@ import Foundation
 struct AlertViewConstants {
     struct ViewModifiers {
         static let maxTitleLinesNumber: Int = 2
+        static let maxBodyLinesNumber: Int = 6
         static let cornerRadius: CGFloat = 50
         static let imageSize: CGFloat = 100
         static let closeButtonSize: CGFloat = 40

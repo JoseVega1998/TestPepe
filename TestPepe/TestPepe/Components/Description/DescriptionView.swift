@@ -7,8 +7,19 @@
 
 import UIKit
 
-@objc public class DescriptionView: UIView {
+class DescriptionView: UIView {
         
+    // MARK: - PRIVATE PROPERTIES
+    private var titleText: String = ""
+    private var bodyText: String = ""
+    private var buttonTitle: String = ""
+    private var buttonAction:(() -> Void)?
+
+    private var hasButton: Bool {
+        return !self.titleText.isEmpty
+    }
+    
+    // MARK: - COMPONENTS
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyFont(type: .Bold)
@@ -51,16 +62,8 @@ import UIKit
         
         return horizontalStack
     }()
-    
-    private var titleText: String = ""
-    private var bodyText: String = ""
-    private var buttonTitle: String = ""
-    private var buttonAction:(() -> Void)?
-
-    var hasButton: Bool {
-        return self.buttonAction != nil && !self.titleText.isEmpty
-    }
-                
+                    
+    // MARK: - INIT
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -69,35 +72,8 @@ import UIKit
     required init?(coder: NSCoder) {
         fatalError("init() has not been implemented")
     }
-    
-    func configure(
-        title: String,
-        description: String,
-        buttonTitle: String,
-        buttonAction: @escaping (() -> Void)
-    ) {
-        self.titleText = title
-        self.bodyText = description
-        self.buttonTitle = buttonTitle
-        self.buttonAction = buttonAction
-        self.configureComponents()
-    }
-    
-    func configure(title: String, description: String) {
-        self.titleText = title
-        self.bodyText = description
-        self.configureComponents()
-    }
 
-    private func configureComponents() {
-        self.titleLabel.text = self.titleText
-        self.descriptionLabel.text = self.bodyText
-        if let action = self.buttonAction {
-            self.textButton.setUp(type: .Text, title: self.buttonTitle)
-            self.textButton.setAction { action() }
-        }
-    }
-    
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUI() {
         self.backgroundColor = .clear
         self.addSubview(self.contentStack)
@@ -109,7 +85,29 @@ import UIKit
             right: self.rightAnchor,
             paddingRight: 16
         )
-        //self.textButton.isHidden = !self.hasButton
+    }
+
+    private func configureComponents() {
+        self.titleLabel.text = self.titleText
+        self.descriptionLabel.text = self.bodyText
+        self.textButton.setUp(type: .Text, title: self.buttonTitle)
+        if let action = self.buttonAction {
+            self.textButton.setAction { action() }
+        }
+    }
+        
+    // MARK: - PUBLIC FUNCTIONS
+    public func configure(
+        title: String,
+        description: String,
+        buttonTitle: String,
+        buttonAction: @escaping (() -> Void)
+    ) {
+        self.titleText = title
+        self.bodyText = description
+        self.buttonTitle = buttonTitle
+        self.buttonAction = buttonAction
+        self.configureComponents()
     }
         
 }

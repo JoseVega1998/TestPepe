@@ -9,12 +9,14 @@ import UIKit
 
 class Loader: UIView {
     
+    // MARK: - COMPONENTS
     private let label: UILabel = {
         let label = UILabel()
         label.font = .bodyLFont(type: .Bold)
         label.textColor = .primary
         label.numberOfLines = LoaderConstants.ViewModifiers.maxLinesNumber
         label.text = "Wait a minute"
+        label.textAlignment = .center
         return label
     }()
     
@@ -38,6 +40,7 @@ class Loader: UIView {
         return stack
     }()
     
+    // MARK: - INIT
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -47,12 +50,18 @@ class Loader: UIView {
         fatalError("init() has not been implemented")
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUI() {
         self.setHeight(height: UIScreen.screenHeight)
         self.setWidth(width: UIScreen.screenWidth)
         self.backgroundColor = .background2.withAlphaComponent(0.8)
         self.addSubview(self.contentStack)
         self.contentStack.centerInView(with: self)
+    }
+    
+    // MARK: - PUBLIC FUNCTIONS
+    func setText(with text: String) {
+        self.label.text = text
     }
     
 }

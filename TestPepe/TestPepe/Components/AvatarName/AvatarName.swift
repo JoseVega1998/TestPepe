@@ -7,8 +7,9 @@
 
 import UIKit
 
-@objc public class AvatarName: UIView {
+class AvatarName: UIView {
         
+    // MARK: - COMPONENTS
     private lazy var avatarView: AvatarView = {
         let view = AvatarView(frame: .zero)
         return view
@@ -59,6 +60,7 @@ import UIKit
         return horizontalStack
     }()
             
+    // MARK: - INIT
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -68,6 +70,7 @@ import UIKit
         fatalError("init() has not been implemented")
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUI() {
         self.backgroundColor = .clear
         self.addSubview(self.contentStack)
@@ -79,6 +82,7 @@ import UIKit
         )
     }
     
+    // MARK: - PUBLIC FUNCTIONS
     public func setUp(avatar: String, name: String, product: String) {
         self.avatarView.setAvatar(with: avatar)
         self.nameLabel.text = name

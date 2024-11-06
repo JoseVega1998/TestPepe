@@ -7,6 +7,4 @@
 
 import Foundation
 
-struct MovieDetailModel {
-    var movie: MovieListResponse.MovieList = MovieListResponse.MovieList()
-}
+struct MovieDetailModel {}

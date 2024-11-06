@@ -9,6 +9,7 @@ import UIKit
 
 @objc public class RequerimentView: UIView {
         
+    // MARK: - COMPONENTS
     private let icon: UIImageView = {
         let image = UIImage.checkmark.withRenderingMode(.alwaysTemplate)
         let imageView = UIImageView(image: image)
@@ -37,6 +38,7 @@ import UIKit
         return stack
     }()
             
+    // MARK: - INIT
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -46,6 +48,7 @@ import UIKit
         fatalError("init() has not been implemented")
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUI() {
         self.backgroundColor = .alertLight
         self.layer.cornerRadius = RequerimentConstants.ViewModifiers.cornerRadius
@@ -62,6 +65,7 @@ import UIKit
         )
     }
     
+    // MARK: - PUBLIC FUNCTIONS
     public func setDescription(with description: String) {
         self.descriptionLabel.text = description
     }

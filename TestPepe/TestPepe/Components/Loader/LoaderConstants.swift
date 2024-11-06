@@ -9,6 +9,6 @@ import Foundation
 
 struct LoaderConstants {
     struct ViewModifiers {
-        static let maxLinesNumber: Int = 1
+        static let maxLinesNumber: Int = 2
     }
 }

@@ -7,9 +7,11 @@
 
 import UIKit
 
-@objc public class BaseButton: UIButton {
-    var buttonModel: ButtonModel?
+class BaseButton: UIButton {
+    // MARK: - PRIVATE PROPERTIES
+    private var buttonModel: ButtonModel?
     
+    // MARK: - OVERRIDE PROPERTIES
     public override var intrinsicContentSize: CGSize {
         CGSize(
             width: (titleLabel?.intrinsicContentSize.width ?? 0.0) + ButtonsConstants.ViewModifiers.contentInsetLateral,
@@ -41,6 +43,7 @@ import UIKit
         }
     }
         
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpAppareance() {
         guard let buttonModel = self.buttonModel else { return }
         self.backgroundColor = buttonModel.colorSet.backgroundColor
@@ -87,6 +90,7 @@ import UIKit
         )
     }
     
+    // MARK: - PUBLIC FUNCTIONS
     public func setUpUI(model: ButtonModel) {
         self.buttonModel = model
         self.setUpAppareance()

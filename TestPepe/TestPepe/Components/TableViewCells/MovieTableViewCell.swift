@@ -9,15 +9,17 @@ import UIKit
 
 class MovieTableViewCell: UITableViewCell {
     
-    static let id = "MovieTableViewCell"
-    
+    // MARK: - PUBLIC PROPERTIES
+    public static let id = "MovieTableViewCell"
+        
+    // MARK: - COMPONENTS
     private let banner: UIImageView = {
         let image = UIImageView()
         image.setWidth(width: 120)
         image.setHeight(height: 100)
         return image
     }()
-    
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyFont(type: .Bold)
@@ -94,15 +96,25 @@ class MovieTableViewCell: UITableViewCell {
         return horizontalStack
     }()
     
+    // MARK: - INIT
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setUpUi()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.titleLabel.text = ""
+        self.releasedDateLabel.text = ""
+        self.voteAverageLabel.text = ""
+        self.banner.image = nil
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUi()  {
         self.backgroundColor = .clear
         self.addSubview(self.contentStack)
@@ -118,6 +130,7 @@ class MovieTableViewCell: UITableViewCell {
         )
     }
     
+    // MARK: - PUBLIC FUNCTIONS
     public func configData(
         banner: String,
         title: String,
@@ -129,13 +142,5 @@ class MovieTableViewCell: UITableViewCell {
         self.releasedDateLabel.text = releaseDate
         self.voteAverageLabel.text = "\(voteAverage.rounded(toPlaces: 1)) (\(voteCount))"
         self.banner.downloadImage(from: "https://image.tmdb.org/t/p/original\(banner)")
-    }
-}
-
-extension Double {
-    /// Rounds the double to decimal places value
-    func rounded(toPlaces places:Int) -> Double {
-        let divisor = pow(10.0, Double(places))
-        return (self * divisor).rounded() / divisor
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 enum ViewControllers: String {
+    case SplashView = "SplashViewController"
     case MovieListView = "MovieListViewController"
     case MovieDetailView = "MovieDetailViewController"
 }

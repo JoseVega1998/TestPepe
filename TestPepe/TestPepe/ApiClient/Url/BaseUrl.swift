@@ -10,7 +10,7 @@ import Foundation
 struct BaseUrl {
     static func getBaseUrl() -> String {
         do {
-            // get from configuration file
+            // get from x configuration file
             let url: String = "https://api.themoviedb.org/3"
             return url
         }

@@ -9,9 +9,13 @@ import UIKit
 
 class MovieListViewController: BaseViewController {
     
-    private let viewModel = MovieListViewModel()
+    // MARK: - PUBLIC PROPERTIES
+    let viewModel = MovieListViewModel()
+    
+    // MARK: - PRIVATE PROPERTIES
     private let refreshControl = UIRefreshControl()
     
+    // MARK: - COMPONENTS
     private lazy var movieTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.separatorStyle = .singleLine
@@ -21,17 +25,21 @@ class MovieListViewController: BaseViewController {
         table.dataSource = self
         return table
     }()
+    
+    private lazy var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.font = .bodyFont(type: .Bold)
+        label.textColor = .primary
+        label.numberOfLines = 2
+        label.text = "Oops...\nSorry, we couldn't find any movies."
+        label.textAlignment = .center
+        return label
+    }()
         
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    deinit {
-        print("ViewController resign")
-    }
-    
+    // MARK: - LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.disableBack()
         self.setUpUi()
         self.configureComponents()
     }
@@ -39,6 +47,15 @@ class MovieListViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.getMovieList()
+    }
+    
+    // MARK: - PRIVATE FUNCTIONS
+    private func disableBack() {
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.hidesBackButton = true
+        guard let nv = self.navigationController else { return }
+        nv.navigationItem.backBarButtonItem?.isEnabled = false
+        nv.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     private func setUpUi() {
@@ -58,15 +75,23 @@ class MovieListViewController: BaseViewController {
         self.movieTableView.addSubview(self.refreshControl)
     }
     
-    @objc func refresh(_ sender: AnyObject) {
+    @objc private func refresh(_ sender: AnyObject) {
         Task {
             do {
                 try await self.viewModel.getMovieList(resetModel: true)
-                self.movieTableView.reloadData()
+                self.reloadData()
                 self.refreshControl.endRefreshing()
             }
             catch {
-                print(error)
+                let alertView = AlertView(
+                    image: .alert,
+                    title: "Oops",
+                    body: error.localizedDescription,
+                    primaryButtonText: "Dismiss",
+                    primaryPerforms: { self.dismiss(animated: true)}
+                )
+                super.dismissLoader()
+                Navigation.navigate(to: alertView, from: self, using: .presentBottomSheet)
             }
         }
     }
@@ -76,7 +101,7 @@ class MovieListViewController: BaseViewController {
             do {
                 super.showLoader()
                 try await self.viewModel.getMovieList(resetModel: true)
-                self.movieTableView.reloadData()
+                self.reloadData()
                 super.dismissLoader()
             }
             catch {
@@ -92,21 +117,22 @@ class MovieListViewController: BaseViewController {
             }
         }
     }
+    
+    private func reloadData() {
+        self.movieTableView.reloadData()
+        switch self.viewModel.stateView {
+        case .empty:
+            self.movieTableView.backgroundView = self.emptyLabel
+            self.movieTableView.separatorStyle = .none
+        case .hasContent: break
+        }
+    }
 }
 
+// MARK: - UITableViewDelegate
 extension MovieListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = self.viewModel.movieList[indexPath.row]
-        Navigation.navigate(
-            to: Navigation.createMovieDetailVc(movie: data),
-            from: self,
-            using: .push
-        )
-        
-        // TEST ALERTS
-        if indexPath.row == 0 {
-            
-        }
+        self.viewModel.routeToMovieDetail(index: indexPath.row)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -121,11 +147,19 @@ extension MovieListViewController: UITableViewDelegate {
             if self.viewModel.hasMoreItems {
                 Task {
                     do {
-                        try await self.viewModel.getMovieList(resetModel: true)
-                        self.movieTableView.reloadData()
+                        try await self.viewModel.getMovieList(resetModel: false)
+                        self.reloadData()
                     }
                     catch {
-                        print(error)
+                        let alertView = AlertView(
+                            image: .alert,
+                            title: "Oops",
+                            body: error.localizedDescription,
+                            primaryButtonText: "Dismiss",
+                            primaryPerforms: { self.dismiss(animated: true)}
+                        )
+                        super.dismissLoader()
+                        Navigation.navigate(to: alertView, from: self, using: .presentBottomSheet)
                     }
                 }
             }
@@ -133,6 +167,7 @@ extension MovieListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension MovieListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.viewModel.movieList.count

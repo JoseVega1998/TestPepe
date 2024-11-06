@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-public enum Encoding: String {
+enum Encoding: String {
     case url
     case json
 }

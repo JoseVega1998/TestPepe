@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 class ApiService: NSObject {
     
@@ -31,8 +30,6 @@ class ApiService: NSObject {
         var request = URLRequest(url: url)
         request.httpMethod = requestModel.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        //request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
         switch requestModel.header {
         case .Authorization:
             request.setValue(self.bearerToken, forHTTPHeaderField: "Authorization")
@@ -50,7 +47,6 @@ class ApiService: NSObject {
             case .json:
                 request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
             }
-            
         }
         let parameters = String(data: request.httpBody ?? Data(), encoding: .utf8)
         print("-------- REQUEST --------")
@@ -58,7 +54,6 @@ class ApiService: NSObject {
         print("HEADERS: \(request.allHTTPHeaderFields ?? ["":""])")
         print("URL: \(request.url?.absoluteString ?? "N/A")")
         print("BODY: \(parameters ?? "")")
-        
         do {
             let (data, response) = try await self.session.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -106,22 +101,25 @@ class ApiService: NSObject {
             for (nestedKey, value) in dictionary {
                 components += self.queryComponents(fromKey: "\(key)[\(nestedKey)]", value: value)
             }
-        } else if let array = value as? [Any] {
+        }
+        else if let array = value as? [Any] {
             for value in array {
                 components += self.queryComponents(fromKey: "\(key)[]", value: value)
             }
-        } else if let value = value as? NSNumber {
-            if value.isBool {
-                components.append((escape(key), escape("\(value.boolValue)")))
-            } else {
-                components.append((escape(key), escape("\(value)")))
-            }
-        } else if let bool = value as? Bool {
-            components.append((escape(key), escape("\(bool)")))
-        } else {
-            components.append((escape(key), escape("\(value)")))
         }
-        
+        else if let value = value as? NSNumber {
+            if value.isBool {
+                components.append((self.escape(key), self.escape("\(value.boolValue)")))
+            } else {
+                components.append((self.escape(key), self.escape("\(value)")))
+            }
+        }
+        else if let bool = value as? Bool {
+            components.append((self.escape(key), self.escape("\(bool)")))
+        }
+        else {
+            components.append((self.escape(key), self.escape("\(value)")))
+        }
         return components
     }
     

@@ -9,20 +9,23 @@ import UIKit
 
 class DynamicHeightScrollView: UIScrollView {
     
-    var contentView: UIView
+    // MARK: - PRIVATE PROPERTIES
+    private var contentView: UIView
     
+    // MARK: - INIT
     init(contentView: UIView) {
         self.contentView = contentView
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
-        setUpUI()
+        self.setUpUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpUI() {
+    // MARK: - PRIVATE FUNCTIONS
+    private func setUpUI() {
         self.addSubview(contentView)
         self.contentView.setConstraints(
             top: self.contentLayoutGuide.topAnchor,

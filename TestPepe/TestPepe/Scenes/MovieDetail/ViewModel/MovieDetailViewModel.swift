@@ -9,15 +9,14 @@ import Foundation
 
 class MovieDetailViewModel {
     // MARK: - PRIVATE PROPERTIES
-    private var model: MovieDetailModel
-    
-    // MARK: - INIT
-    init(movie: MovieListResponse.MovieList) {
-        self.model = MovieDetailModel(movie: movie)
-    }
-    
+    private var model = MovieDetailModel()
+        
+    // MARK: - PUBLIC PROPERTIES
+    var router: MovieDetailRouter!
+    var _movie: MovieListResponse.MovieList?
+        
     var movie: MovieListResponse.MovieList {
-        self.model.movie
+        self._movie!
     }
     
     var movieTitle: String {

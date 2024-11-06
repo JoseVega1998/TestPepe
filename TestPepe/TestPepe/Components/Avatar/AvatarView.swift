@@ -7,8 +7,9 @@
 
 import UIKit
 
-@objc public class AvatarView: UIView {
+class AvatarView: UIView {
         
+    // MARK: - COMPONENTS
     private let label: UILabel = {
         let label = UILabel()
         label.font = .bodyLFont(type: .Bold)
@@ -17,6 +18,7 @@ import UIKit
         return label
     }()
             
+    // MARK: - INIT
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpUI()
@@ -26,6 +28,7 @@ import UIKit
         fatalError("init() has not been implemented")
     }
     
+    // MARK: - PRIVATE FUNCTIONS
     private func setUpUI() {
         self.setSquareView(with: AvatarConstants.ViewModifiers.height)
         self.layer.cornerRadius = AvatarConstants.ViewModifiers.height / 2
@@ -35,6 +38,7 @@ import UIKit
         self.label.centerInView(with: self)
     }
     
+    // MARK: - PUBLIC FUNCTIONS
     public func setAvatar(with text: String) {
         self.label.text = text
     }
